@@ -20,7 +20,7 @@
 #define AUDIT_LOG_PREFIX "Audit Plugin:"
 #define AUDIT_PROTOCOL_VERSION "1.0"
 
-#if !defined(MARIADB_BASE_VERSION) && MYSQL_VERSION_ID >= 50709
+#if !defined(MARIADB_BASE_VERSION) && MYSQL_VERSION_ID >= 50706
 // For locking we use the native lock routines provided by MySQL.
 // The data types and functions for native locking changed at 5.7.x.
 // Try to hide this with macros.
@@ -202,7 +202,7 @@ public:
     {		
 		if(!Audit_formatter::thd_offsets.db) //no offsets use compiled in header
 		{
-#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50709
+#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50706
  			return thd->db;
 #else
 			return thd->db().str;
@@ -227,7 +227,7 @@ public:
 		Security_context * sctx = thd_inst_main_security_ctx(thd);
 		if(!Audit_formatter::thd_offsets.sec_ctx_user) //no offsets use compiled in header
 		{
-#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50709
+#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50706
  			return sctx->user;
 #else
 			return sctx->user().str;
@@ -251,7 +251,7 @@ public:
 #if  MYSQL_VERSION_ID < 50534 || (MYSQL_VERSION_ID >= 50600 && MYSQL_VERSION_ID < 50614)
 		return sctx->host;
 #elif (MYSQL_VERSION_ID >= 50534 && MYSQL_VERSION_ID < 50600) \
-	|| (MYSQL_VERSION_ID >= 50614 &&  MYSQL_VERSION_ID < 50709)
+	|| (MYSQL_VERSION_ID >= 50614 &&  MYSQL_VERSION_ID < 50706)
  		return sctx->get_host()->ptr();
 #else
 		// interface changed again in 5.7
@@ -276,7 +276,7 @@ public:
 #if  MYSQL_VERSION_ID < 50534 || (MYSQL_VERSION_ID >= 50600 && MYSQL_VERSION_ID < 50614)
 		return sctx->ip;
 #elif (MYSQL_VERSION_ID >= 50534 && MYSQL_VERSION_ID < 50600) \
-	|| (MYSQL_VERSION_ID >= 50614 &&  MYSQL_VERSION_ID < 50709)
+	|| (MYSQL_VERSION_ID >= 50614 &&  MYSQL_VERSION_ID < 50706)
 		return sctx->get_ip()->ptr();
 #else
 		// interface changed again in 5.7
@@ -293,7 +293,7 @@ public:
 		Security_context * sctx = thd_inst_main_security_ctx(thd);
 		if(!Audit_formatter::thd_offsets.sec_ctx_priv_user) //no offsets use compiled in header
 		{
-#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50709
+#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50706
  			return sctx->priv_user;
 #else
 			return sctx->priv_user().str;

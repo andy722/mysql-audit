@@ -468,7 +468,7 @@ static  const char * retrieve_user (THD * thd)
 //will return a pointer to the query and set len with the length of the query
 //starting with MySQL version 5.1.41 thd_query_string is added
 //And at 5.7 it changed
-#if ! defined(MARIADB_BASE_VERSION) && MYSQL_VERSION_ID >= 50709
+#if ! defined(MARIADB_BASE_VERSION) && MYSQL_VERSION_ID >= 50706
 
 extern "C" LEX_CSTRING thd_query_unsafe(MYSQL_THD thd);
 

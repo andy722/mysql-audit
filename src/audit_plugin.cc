@@ -307,7 +307,7 @@ static void audit(ThdSesData *pThdData)
 }
 
 
-#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50709
+#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50706
 static int  (*trampoline_send_result_to_client)(Query_cache *pthis, THD *thd, char *sql, uint query_length) = NULL;
 #else
 static int  (*trampoline_send_result_to_client)(Query_cache *pthis, THD *thd, const LEX_CSTRING& sql_query) = NULL;
@@ -364,7 +364,7 @@ static bool audit_check_table_access(THD *thd, ulong want_access,TABLE_LIST *tab
 
 static unsigned int trampoline_check_table_access_size = 0;
 
-#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50709
+#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50706
 static int  audit_send_result_to_client(Query_cache *pthis, THD *thd, char *sql, uint query_length)
 #else
 static int  audit_send_result_to_client(Query_cache *pthis, THD *thd, const LEX_CSTRING& sql_query)
@@ -379,7 +379,7 @@ static int  audit_send_result_to_client(Query_cache *pthis, THD *thd, const LEX_
 		  memset (pList,0,sizeof (QueryTableInf));
 		  THDVAR(thd, query_cache_table_list) =(ulong)pList;
 	 }	 
-#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50709
+#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50706
 	 res = trampoline_send_result_to_client (pthis,thd, sql, query_length);
 #else
 	 res = trampoline_send_result_to_client (pthis, thd, sql_query);
@@ -564,7 +564,7 @@ void remove_hot_functions ()
 	(void*) trampoline_open_tables, trampoline_open_tables_size, true);
 	trampoline_open_tables_size=0;
 
-#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50709
+#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50706
 	int (Query_cache::*pf_send_result_to_client)(THD *,char *, uint) = &Query_cache::send_result_to_client;
 #else
 	int (Query_cache::*pf_send_result_to_client)(THD *,const LEX_CSTRING&) = &Query_cache::send_result_to_client;
@@ -579,7 +579,7 @@ void remove_hot_functions ()
 		trampoline_check_table_access_size, true);	
 	trampoline_check_table_access_size=0;
 
-#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50709
+#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50706
 	target_function = (void*) mysql_execute_command;
 #else
 	target_function = (void*)
@@ -817,7 +817,7 @@ static bool validate_offsets(const ThdOffsets * offset)
 	    char user_test_val[] = "aud_tusr";
 		if(!offset->sec_ctx_user) //use compiled header
 		{
-#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50709
+#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50706
 			sctx->user = user_test_val;
 #else
 			sctx->set_user_ptr(user_test_val, strlen(user_test_val));
@@ -1564,7 +1564,7 @@ static void record_objs_string_update_extended(THD *thd, struct st_mysql_sys_var
 	//hot patch stuff
 	void * target_function = NULL;
 	
-#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50709
+#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50706
 	target_function = (void*) mysql_execute_command;
 #else
 	target_function = (void*)
@@ -1600,7 +1600,7 @@ static void record_objs_string_update_extended(THD *thd, struct st_mysql_sys_var
 		DBUG_RETURN(1);
 	}
 #endif
-#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50709
+#if defined(MARIADB_BASE_VERSION) || MYSQL_VERSION_ID < 50706
 	int (Query_cache::*pf_send_result_to_client)(THD *,char *, uint) = &Query_cache::send_result_to_client;	
 #else
 	int (Query_cache::*pf_send_result_to_client)(THD *,const LEX_CSTRING&) = &Query_cache::send_result_to_client;
@@ -1670,14 +1670,14 @@ static struct st_mysql_show_var audit_status[] =
 { "Audit_version",
         (char *) MYSQL_AUDIT_PLUGIN_VERSION "-" MYSQL_AUDIT_PLUGIN_REVISION,
         SHOW_CHAR
-#if ! defined(MARIADB_BASE_VERSION) && MYSQL_VERSION_ID >= 50709
+#if ! defined(MARIADB_BASE_VERSION) && MYSQL_VERSION_ID >= 50706
 	, SHOW_SCOPE_GLOBAL
 #endif
 	},
 { "Audit_protocol_version",
 		(char *) AUDIT_PROTOCOL_VERSION,
 		SHOW_CHAR
-#if ! defined(MARIADB_BASE_VERSION) && MYSQL_VERSION_ID >= 50709
+#if ! defined(MARIADB_BASE_VERSION) && MYSQL_VERSION_ID >= 50706
 	, SHOW_SCOPE_GLOBAL
 #endif
 	},
@@ -1930,7 +1930,7 @@ extern "C"  void __attribute__ ((constructor)) audit_plugin_so_init(void)
                audit_plugin.interface_version >> 8);
 
 }
-#elif !defined(MARIADB_BASE_VERSION) && MYSQL_VERSION_ID < 50709
+#elif !defined(MARIADB_BASE_VERSION) && MYSQL_VERSION_ID < 50706
 // Interface version for MySQL 5.6 changed in 5.6.14.
 // This is not needed for 5.7.
 extern "C"  void __attribute__ ((constructor)) audit_plugin_so_init(void)

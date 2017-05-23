@@ -24,7 +24,8 @@
 
 // These two are not present in 5.7.9
 #if MYSQL_VERSION_ID < 50709
-#include <my_pthread.h>
+#include <mysql/thread_pool_priv.h>
+#include <my_thread.h>
 #include <sql_priv.h>
 #endif
 
@@ -54,7 +55,7 @@
 #endif /* ! if MYSQL_VERSION_ID >= 50505 */
 #endif /* ! if MYSQL_VERSION_ID < 50505 */
 
-#if MYSQL_VERSION_ID >= 50709
+#if MYSQL_VERSION_ID >= 50706
 #include <sql/log.h>
 #if ! defined(MARIADB_BASE_VERSION)
 #include <sql/auth/auth_common.h>
